@@ -14,7 +14,7 @@ class UserController extends Controller
     public function index()
     {
         $users=User::all();
-        if(empty($users)){
+        if($users->isEmpty()){
             $data=[
                 "message"=>"No se encontro ningun usuario",
                 "status"=>200
@@ -66,7 +66,16 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user=User::find($id);
+        if(!$user){
+            $data=[
+                "message"=> "no se encotró este usuario",
+                "status"=> 200
+            ];
+            return response()->json($data,200);
+        }
+        return response()->json($user,200);
+
     }
 
     /**
@@ -74,7 +83,48 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validator=Validator::make($request->all(),[
+            "name"=>"nullable|string|max:255",
+            "email"=>"nullable|string|max:255|email",
+            "role"=>"nullable|string|max:255",
+            "password"=>"nullable|string|max:255",
+        ]);
+        if($validator->fails()){
+            $data=[
+                "message"=> "Error al actualizar al usuario",
+                "Error"=> $validator->errors()->first(),
+                "status"=> 200
+            ];
+            return response()->json($data,200);
+        }
+        $user=User::find($id);
+        if(!$user){
+            $data=[
+            "message"=> "no se encotró este usuario",
+            "status"=> 200
+            ];
+            return response()->json($data,200);
+        }
+        if ($request->has('name')) {
+            $user->name = $request->input('name');
+        }
+        if ($request->has('email')) {
+            $user->email = $request->input('email');
+        }
+        if ($request->has('role')) {
+            $user->role = $request->input('role');
+        }
+        if ($request->has('password')) {
+            $user->password = $request->input('password');
+        }
+
+        $user->save();
+        $data=[
+            'message'=> 'Usuario actualizado',
+            'user'=>$user,
+            'status'=>201
+        ];
+        return response()->json($data,201);
     }
 
     /**
