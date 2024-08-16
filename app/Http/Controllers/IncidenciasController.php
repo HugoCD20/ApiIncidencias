@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Incidencias;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -54,6 +55,21 @@ class IncidenciasController extends Controller
             'message'=>'Incidencia registrada',
             'incidencia'=>$incidencia,
             'status'=>201
+        ];
+        return response()->json($data,201);
+    }
+    public function show($id){
+        $incidencia=Incidencias::find($id);
+        if(!$incidencia){
+            $data=[
+                'message'=>'no se encontró la incidencia',
+                'Status'=>200
+            ];
+            return response()->json($data,200);
+        }
+        $data=[
+            'Incidencia'=>$incidencia,
+            'Status'=>201
         ];
         return response()->json($data,201);
     }

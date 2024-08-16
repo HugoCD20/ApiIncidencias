@@ -14,4 +14,5 @@ Route::delete("/user/{id}",[UserController::class,"destroy"]);
 //Incidencias routes
 
 Route::get("/incidencia",[IncidenciasController::class,"index"]);
+Route::get("/incidencia/{id}",[IncidenciasController::class,"show"]);
 Route::post("/incidencia",[IncidenciasController::class,"store"]);
