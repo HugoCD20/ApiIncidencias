@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\IncidenciasController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -9,3 +10,8 @@ Route::post("/user",[UserController::class,"store"]);
 Route::get("/user/{id}",[UserController::class,"show"]);
 Route::put("/user/{id}",[UserController::class,"update"]);
 Route::delete("/user/{id}",[UserController::class,"destroy"]);
+
+//Incidencias routes
+
+Route::get("/incidencia",[IncidenciasController::class,"index"]);
+Route::post("/incidencia",[IncidenciasController::class,"store"]);

@@ -14,7 +14,7 @@ class UserController extends Controller
     public function index()
     {
         $users=User::all();
-        if($users->isEmpty()){
+        if($users->isEmpty()){                                                                                  
             $data=[
                 "message"=>"No se encontro ningun usuario",
                 "status"=>200
