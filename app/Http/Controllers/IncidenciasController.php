@@ -21,13 +21,13 @@ class IncidenciasController extends Controller
         return response()->json($incidencias,201);
     }
     public function store(request $request){
-        
+
         $validator=Validator::make($request->all(),[
             'user_id'=> 'required|integer|max:255',
-            'titulo'=> 'required|string|max:255',            
-            'descripcion'=> 'required|string|max:255',            
-            'evidencias'=> 'required|string|max:255',            
-            'etapa'=> 'required|string|max:255',            
+            'titulo'=> 'required|string|max:255',
+            'descripcion'=> 'required|string|max:255',
+            'evidencias'=> 'required|string|max:255',
+            'etapa'=> 'required|string|max:255',
         ]);
 
         if($validator->fails()){
@@ -40,9 +40,9 @@ class IncidenciasController extends Controller
         }
         $incidencia=Incidencias::create([
             'user_id'=> $request->user_id,
-            'titulo'=> $request->titulo,            
-            'descripcion'=> $request->descripcion,            
-            'evidencias'=> $request->evidencias,            
+            'titulo'=> $request->titulo,
+            'descripcion'=> $request->descripcion,
+            'evidencias'=> $request->evidencias,
             'etapa'=> $request->etapa,
         ]);
         if(!$incidencia){
@@ -70,6 +70,72 @@ class IncidenciasController extends Controller
         $data=[
             'Incidencia'=>$incidencia,
             'Status'=>201
+        ];
+        return response()->json($data,201);
+    }
+
+    public function update(Request $request, string $id ){
+
+        $validator=Validator::make($request->all(),[
+            'titulo'=>'nullable|string|max:255',
+            'descripcion'=>'nullable|string|max:255',
+            'evidencias'=>'nullable|string|max:255',
+            'etapa'=>'nullable|string|max:255',
+        ]);
+
+        if($validator->fails()){
+            $data=[
+                'message'=>'ha ocurrido un error al validar los atos',
+                'Error'=>$validator->errors()->first(),
+                'status'=>200
+            ];
+            return response()->json($data,200);
+        }
+
+        $incidencia=Incidencias::find($id);
+        if(!$incidencia){
+            $data=[
+                'message'=>'No se ha encontrado la incidencia',
+                'status'=>200
+            ];
+            return response()->json($data,200);
+        }
+
+        if($request->has('titulo')){
+            $incidencia->titulo=$request->input('titulo');
+        }
+        if($request->has('descripcion')){
+            $incidencia->descripcion=$request->input('descripcion');
+        }
+        if($request->has('evidencias')){
+            $incidencia->evidencias=$request->input('evidencias');
+        }
+        if($request->has('etapa')){
+            $incidencia->etapa=$request->input('etapa');
+        }
+
+        $incidencia->save();
+        $data=[
+            'message'=>"Incidencia actualizada correctamente",
+            'incidencia'=>$incidencia,
+            'status'=>201
+        ];
+        return response()->json($data,201);
+
+    }
+    public function destroy(string $id){
+        $incidencia=Incidencias::find($id);
+        if(!$incidencia){
+            $data=[
+                'message'=>'No se ha encontrado esta incidencia',
+                'status'=>200
+            ];
+            return response()->json($data,200);
+        }
+        $incidencia->delete();
+        $data=[
+            'message'=>'Incidencia eliminada correctamente',
+            'status'=>201
         ];
         return response()->json($data,201);
     }
