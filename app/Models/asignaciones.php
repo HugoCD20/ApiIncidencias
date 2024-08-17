@@ -9,15 +9,20 @@ class asignaciones extends Model
 {
     use HasFactory;
 
-    protected $fillable=[
-        "user_id",
-        "incidencia_id"
+    protected $fillable = [
+        'user_id',
+        'incidencia_id',
     ];
-    public function user(){
-        return $this->hasMany(User::class);
+
+    // Un Asignacion pertenece a un User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
-    public function incidencia(){
-        return $this->hasMany(Incidencias::class);
+    // Un Asignacion pertenece a una Incidencia
+    public function incidencia()
+    {
+        return $this->belongsTo(Incidencias::class);
     }
 }

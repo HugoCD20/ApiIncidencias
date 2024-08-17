@@ -16,16 +16,28 @@ class Incidencias extends Model
         'evidencias',
         'etapa',
     ];
-    public function user(){
+
+    // Una Incidencia pertenece a un User
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-    public function tarea(){
+
+    // Una Incidencia puede tener muchas Tareas
+    public function tarea()
+    {
         return $this->hasMany(Tareas::class);
     }
-    public function asignacion(){
-        return $this->hasMany(asignaciones::class);
+
+    // Una Incidencia puede tener muchas Asignaciones
+    public function asignaciones()
+    {
+        return $this->hasMany(Asignaciones::class);
     }
-    public function prueba(){
+
+    // Una Incidencia puede tener muchas Pruebas
+    public function prueba()
+    {
         return $this->hasMany(Pruebas::class);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AsignacionesController;
 use App\Http\Controllers\IncidenciasController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -19,3 +20,7 @@ Route::post("/incidencia",[IncidenciasController::class,"store"]);
 Route::put("/incidencia/{id}",[IncidenciasController::class,"update"]);
 Route::delete("/incidencia/{id}",[IncidenciasController::class,"destroy"]);
 
+//asignaciones routes
+
+Route::get("/asignacion",[AsignacionesController::class,"index"]);
+Route::post("/asignacion",[AsignacionesController::class,"store"]);
