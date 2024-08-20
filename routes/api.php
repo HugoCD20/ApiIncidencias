@@ -23,4 +23,5 @@ Route::delete("/incidencia/{id}",[IncidenciasController::class,"destroy"]);
 //asignaciones routes
 
 Route::get("/asignacion",[AsignacionesController::class,"index"]);
+Route::get("/asignacion/{id}",[AsignacionesController::class,"show"]);
 Route::post("/asignacion",[AsignacionesController::class,"store"]);

@@ -68,9 +68,22 @@ class AsignacionesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(asignaciones $asignaciones)
+    public function show(string $id)
     {
-        //
+        $asignacion=asignaciones::with('user','incidencia')->findOrFail($id);
+        if(!$asignacion){
+            $data=[
+                'message'=> 'Asignacion no encontrada',
+                'status'=> 200
+            ];
+            return response()->json($data,200);
+        }
+        $data=[
+            'message'=> 'Asignacion encontrada correctamente',
+            'Asignacion'=> new AsignacionResource($asignacion),
+            'status'=> 201
+        ];
+        return response()->json($data,200);
     }
 
     /**

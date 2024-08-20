@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\IncidenciaResource;
 use App\Models\Incidencias;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 class IncidenciasController extends Controller
 {
     public function index(){
-        $incidencias=Incidencias::all();
+        $incidencias=Incidencias::with('user')->get();
         if($incidencias->isEmpty()){
             $data=[
                 'message'=>'No hay incidencias registradas',
@@ -18,7 +19,7 @@ class IncidenciasController extends Controller
             ];
             return response()->json($data,200);
         }
-        return response()->json($incidencias,201);
+        return IncidenciaResource::collection($incidencias);
     }
     public function store(request $request){
 
@@ -59,7 +60,7 @@ class IncidenciasController extends Controller
         return response()->json($data,201);
     }
     public function show($id){
-        $incidencia=Incidencias::find($id);
+        $incidencia=Incidencias::with('user')->find($id);
         if(!$incidencia){
             $data=[
                 'message'=>'no se encontró la incidencia',
@@ -68,10 +69,10 @@ class IncidenciasController extends Controller
             return response()->json($data,200);
         }
         $data=[
-            'Incidencia'=>$incidencia,
+            'Incidencia'=>new IncidenciaResource($incidencia),
             'Status'=>201
         ];
-        return response()->json($data,201);
+        return response()->json($data,200);
     }
 
     public function update(Request $request, string $id ){
@@ -92,7 +93,7 @@ class IncidenciasController extends Controller
             return response()->json($data,200);
         }
 
-        $incidencia=Incidencias::find($id);
+        $incidencia=Incidencias::with('user')->find($id);
         if(!$incidencia){
             $data=[
                 'message'=>'No se ha encontrado la incidencia',
@@ -117,7 +118,7 @@ class IncidenciasController extends Controller
         $incidencia->save();
         $data=[
             'message'=>"Incidencia actualizada correctamente",
-            'incidencia'=>$incidencia,
+            'incidencia'=>new IncidenciaResource($incidencia),
             'status'=>201
         ];
         return response()->json($data,201);

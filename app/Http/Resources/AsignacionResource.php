@@ -16,9 +16,9 @@ class AsignacionResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'=>$this->id,
-            'user'=>'id',
-            'incidencia'=>new IncidenciaResource($this->whenLoaded('incidencia')),
+            'id_asignacion'=>$this->id,
+            'user'=>new UserResource(new UserResource($this->whenLoaded('user'))),
+            'incidencion'=>new IncidenciaResource($this->whenLoaded('incidencia')),
         ];
     }
 }
