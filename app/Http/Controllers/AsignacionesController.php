@@ -20,9 +20,9 @@ class AsignacionesController extends Controller
     if ($asignaciones->isEmpty()) {
         $data = [
             'message' => 'No hay asignaciones registradas',
-            'status' => 200
+            'status' => 400
         ];
-        return response()->json($data, 200);
+        return response()->json($data, 400);
     }
     
     return AsignacionResource::collection($asignaciones);
@@ -74,39 +74,81 @@ class AsignacionesController extends Controller
         if(!$asignacion){
             $data=[
                 'message'=> 'Asignacion no encontrada',
-                'status'=> 200
+                'status'=> 400
             ];
-            return response()->json($data,200);
+            return response()->json($data,400);
         }
         $data=[
             'message'=> 'Asignacion encontrada correctamente',
             'Asignacion'=> new AsignacionResource($asignacion),
-            'status'=> 201
+            'status'=> 200
         ];
         return response()->json($data,200);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(asignaciones $asignaciones)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, asignaciones $asignaciones)
+    public function update(Request $request, string $id)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'user_id'=> 'nullable|integer',
+            'incidencia_id'=> 'nullable|integer'
+        ]);
+        if($validator->fails()){
+            $data=[
+                'message'=>'ha ocurrido un error al validar los datos',
+                'error'=> $validator->errors()->first(),
+                'status'=> 400
+            ];
+            return response()->json($data,400);
+        }
+
+        $asignacion=asignaciones::findOrFail($id);
+
+        if(!$asignacion){
+            $data=[
+                'message'=> 'ha ocurrido un error al procesar la solicitud',
+                'status'=>500
+            ];
+            return response()->json($data,500);
+        }
+
+        if($request->has('user_id')){
+            $asignacion->user_id=$request->input('user_id');
+        }
+        if($request->has('incidencia_id')){
+            $asignacion->incidencia_id=$request->input('incidencia_id');
+        }
+
+        $asignacion->save();
+        $asignacion=asignaciones::with('user','incidencia')->findOrFail($id);
+        $data=[
+            'message'=> 'Asignacion actualizada correctamente',
+            'asignacion'=> new AsignacionResource($asignacion),
+            'status'=> 200
+        ];
+        return response()->json($data,200);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(asignaciones $asignaciones)
+    public function destroy(string $id)
     {
-        //
+        $asignacion=asignaciones::findOrFail($id);
+        if(!$asignacion){
+            $data=[
+                'message'=> 'no se ha encontra la asignacion',
+                'status'=> 400
+            ];
+            return response()->json($data,400);
+        }
+        $asignacion->delete();
+        $data=[
+            'message'=> 'asignacion eliminada correctamente',
+            'status'=> 200
+        ];
+        return response()->json($data,200);
     }
 }

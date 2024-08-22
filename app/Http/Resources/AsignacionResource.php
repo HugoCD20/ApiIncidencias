@@ -18,7 +18,7 @@ class AsignacionResource extends JsonResource
         return [
             'id_asignacion'=>$this->id,
             'user'=>new UserResource(new UserResource($this->whenLoaded('user'))),
-            'incidencion'=>new IncidenciaResource($this->whenLoaded('incidencia')),
+            'incidencia'=>new IncidenciaResource($this->whenLoaded('incidencia')),
         ];
     }
 }
