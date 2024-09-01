@@ -14,7 +14,7 @@ class TareasController extends Controller
      */
     public function index()
     {
-        $tareas=Tareas::with("user")->get();
+        $tareas=Tareas::with("user","incidencia")->get();
 
         if($tareas->isEmpty()){
             $data=[
@@ -48,7 +48,7 @@ class TareasController extends Controller
         }
         $tarea=Tareas::create([
             'user_id'=> $request->user_id,
-            'incidencia'=> $request->incidencia_id,
+            'incidencia_id'=> $request->incidencia_id,
             'titulo'=>$request->titulo,
             'descripcion'=>$request->descripcion,
             'estado'=>$request->estado
