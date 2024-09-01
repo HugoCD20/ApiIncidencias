@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TareaResource;
 use App\Models\Tareas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TareasController extends Controller
 {
@@ -12,15 +14,16 @@ class TareasController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $tareas=Tareas::with("user")->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        if($tareas->isEmpty()){
+            $data=[
+                "message"=> "No hay tareas registradas",
+                "status"=> 400
+            ];
+            return response()->json($data,400);
+        }
+        return TareaResource::collection($tareas);
     }
 
     /**
@@ -28,7 +31,41 @@ class TareasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator=Validator::make($request->all(), [
+            'user_id'=>'required|integer',
+            'incidencia_id'=>'required|integer',
+            'titulo'=>'required|string|max:255',
+            'descripcion'=>'required|string|max:255',
+            'estado'=>'required|string|max:255',
+        ]);
+        if($validator->fails()){
+            $data=[
+                'message'=>'Datos invalidos',
+                'error'=> $validator->errors()->first(),
+                'status'=> 400
+            ];
+            return response()->json($data,500);
+        }
+        $tarea=Tareas::create([
+            'user_id'=> $request->user_id,
+            'incidencia'=> $request->incidencia_id,
+            'titulo'=>$request->titulo,
+            'descripcion'=>$request->descripcion,
+            'estado'=>$request->estado
+        ]);
+        if(!$tarea){
+            $data=[
+                'message'=>'error al crear la tarea',
+                'status'=>500
+            ];
+            return response()->json($data,500);
+        }
+        $data=[
+            'message'=> 'Tarea registrada correctamente',
+            'tarea'=> $tarea,
+            'status'=> 201
+        ];
+        return response()->json($data,201);
     }
 
     /**
@@ -38,15 +75,6 @@ class TareasController extends Controller
     {
         //
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Tareas $tareas)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */
