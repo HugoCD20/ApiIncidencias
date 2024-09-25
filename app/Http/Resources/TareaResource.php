@@ -19,7 +19,7 @@ class TareaResource extends JsonResource
             "titulo"=> $this->titulo,
             "descripcion"=> $this->descripcion,
             "estado"=> $this->estado,
-            "usuario"=> new UserResource($this->whenLoaded("user")),
+            "Tecnico"=> new UserResource($this->whenLoaded("user")),
             "incidencia"=> new IncidenciaResource($this->whenLoaded("incidencia")),
         ];
     }

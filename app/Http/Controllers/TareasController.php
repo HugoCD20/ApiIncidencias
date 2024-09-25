@@ -14,7 +14,7 @@ class TareasController extends Controller
      */
     public function index()
     {
-        $tareas=Tareas::with("user")->get();
+        $tareas=Tareas::with('user','incidencia')->get();
 
         if($tareas->isEmpty()){
             $data=[
@@ -48,7 +48,7 @@ class TareasController extends Controller
         }
         $tarea=Tareas::create([
             'user_id'=> $request->user_id,
-            'incidencia'=> $request->incidencia_id,
+            'incidencia_id'=> $request->incidencia_id,
             'titulo'=>$request->titulo,
             'descripcion'=>$request->descripcion,
             'estado'=>$request->estado
@@ -71,9 +71,22 @@ class TareasController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Tareas $tareas)
-    {
-        //
+    public function show(string $id)
+    {        
+        $tarea=Tareas::with('user','incidencia')->find($id);
+        if(!$tarea){
+            $data=[
+                'message'=>'tarea no encontrada',
+                'status'=>400
+            ];
+            return response()->json($data,400);
+        }
+        $data=[
+            'message'=>'Tarea encontrada',
+            'status'=>201,
+            'Tarea'=>new TareaResource($tarea)
+        ];
+        return response()->json($data,201);
     }
     /**
      * Update the specified resource in storage.

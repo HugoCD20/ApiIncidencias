@@ -17,10 +17,10 @@ class Tareas extends Model
         "estado"
     ];
     public function user(){
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function incidencia(){
-        return $this->hasMany(Incidencias::class);
+        return $this->belongsTo(Incidencias::class);
     }
 }

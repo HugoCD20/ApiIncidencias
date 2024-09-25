@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AsignacionesController;
 use App\Http\Controllers\IncidenciasController;
+use App\Http\Controllers\TareasController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,3 +28,9 @@ Route::get("/asignacion/{id}",[AsignacionesController::class,"show"]);
 Route::post("/asignacion",[AsignacionesController::class,"store"]);
 Route::put("/asignacion/{id}",[AsignacionesController::class,"update"]);
 Route::delete("/asignacion/{id}",[AsignacionesController::class,"destroy"]);
+
+//tareas routes
+
+Route::get("/tarea",[TareasController::class,"index"]);
+Route::get("/tarea/{id}",[TareasController::class,"show"]);
+Route::post("/tarea",[TareasController::class,"store"]);
