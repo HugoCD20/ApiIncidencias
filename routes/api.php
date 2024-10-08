@@ -34,3 +34,5 @@ Route::delete("/asignacion/{id}",[AsignacionesController::class,"destroy"]);
 Route::get("/tarea",[TareasController::class,"index"]);
 Route::get("/tarea/{id}",[TareasController::class,"show"]);
 Route::post("/tarea",[TareasController::class,"store"]);
+Route::put("/tarea/{id}",[TareasController::class,"update"]);
+Route::delete("/tarea/{id}",[TareasController::class,"destroy"]);

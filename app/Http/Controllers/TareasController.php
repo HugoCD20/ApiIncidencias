@@ -91,16 +91,67 @@ class TareasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tareas $tareas)
+    public function update(Request $request, string $id)
     {
-        //
+        $validator=Validator::make($request->all(), [
+            'user_id'=>'nullable|integer',
+            'incidencia_id'=>'nullable|integer',
+            'titulo'=>'nullable|string|max:255',
+            'descripcion'=>'nullable|string|max:255',
+            'estado'=>'nullable|string|max:255',
+        ]);
+        if($validator->fails()){
+            $data=[
+                "message"=>"ha ocurrido un error al intentar actua",
+                "error"=>$validator->errors()->first(),
+                "status"=> 200
+            ];
+            return response()->json($data,200);
+        }
+        $tarea=Tareas::with("user","incidencia")->find($id);
+        if(!$tarea){
+            $data=[
+                "message"=> "La tarea no ha sido encotrada",
+                "status"=> 200
+            ];
+            return response()->json($data,200);
+        }
+        if($request->has('titulo')){
+            $tarea->titulo=$request->input('titulo');
+        }
+        if($request->has('descripcion')){
+            $tarea->descripcion=$request->input('descripcion');
+        }
+        if($request->has('estado')){
+            $tarea->estado=$request->input('estado');
+        }
+        $tarea->save();
+        $data=[
+            'message'=>'Operación exitosa',
+            'status'=> 201,
+            'tarea'=>new TareaResource($tarea)
+        ];
+        return response()->json($data,201);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Tareas $tareas)
+    public function destroy(string $id)
     {
-        //
+        $tarea=Tareas::find($id);
+        if(!$tarea){
+            $data=[
+                'message'=> 'tarea no encontrada',
+                'status'=> 200
+            ];
+            return response()->json($data,200);
+        }
+        $tarea->delete();
+        $data=[
+            'message'=> 'Tarea eliminada exitosamente',
+            'status'=> 201
+        ];
+        return response()->json($data,201);
     }
 }
